@@ -3,39 +3,35 @@
 #include "CorePch.h"
 
 #include <thread>
+#include <atomic>
 
-void HelloThread()
+atomic<int32> sum = 0;
+
+void Add()
 {
-	std::cout << "Hello Thread !!" << std::endl;
+	for (int32 i = 0; i < 1'000'000; ++i)
+	{
+		sum.fetch_add(1); //sum++;
+	}
 }
 
-#include <string>
-
-void HelloThread2(std::string print)
+void Sub()
 {
-	std::cout << print << std::endl;
-}
-
-void HelloThread3(int num)
-{
-	std::cout << num << std::endl;
+	for (int32 i = 0; i < 1'000'000; ++i)
+	{
+		sum.fetch_sub(1); //sum--;
+	}
 }
 
 int main()
 {
-	vector<std::thread> v;
-	for (int32 i = 0; i < 10; ++i)
-	{
-		v.push_back(std::thread(HelloThread3, i));
-	}
+	std::thread t1(Add);
+	std::thread t2(Sub);
 
-	for (int32 i = 0; i < 10; ++i)
-	{
-		if (v[i].joinable())
-			v[i].join();
-	}
+	t1.join();
+	t2.join();
 
-	cout << "Hello Main" << endl;
+	std::cout << sum << std::endl;
 
 	return 0;
 }
