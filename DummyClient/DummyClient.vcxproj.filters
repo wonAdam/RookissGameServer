@@ -2,22 +2,22 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Main">
-      <UniqueIdentifier>{7d5d4d7b-d8fd-44d0-be9b-80746a7656e8}</UniqueIdentifier>
+      <UniqueIdentifier>{c4bc6ba9-a39a-4525-82c1-3c5e822d83bd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utils">
-      <UniqueIdentifier>{f28ac086-c5db-4099-b6ab-5e35846ead4a}</UniqueIdentifier>
+      <UniqueIdentifier>{66398b63-3a6a-4025-b5a1-62d760175a68}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameServer.cpp">
+    <ClCompile Include="DummyClient.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="..\GameServer\pch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="..\GameServer\pch.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
