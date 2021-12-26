@@ -4,34 +4,28 @@
 
 #include <thread>
 #include <atomic>
+#include <mutex>
 
-atomic<int32> sum = 0;
+vector<int32> v;
+mutex m;
 
-void Add()
+
+void Push()
 {
-	for (int32 i = 0; i < 1'000'000; ++i)
+	for (int32 i = 0; i < 10'000; ++i)
 	{
-		sum.fetch_add(1); //sum++;
-	}
-}
-
-void Sub()
-{
-	for (int32 i = 0; i < 1'000'000; ++i)
-	{
-		sum.fetch_sub(1); //sum--;
+		std::lock_guard<std::mutex> lockGuard(m);
+		v.push_back(i);
 	}
 }
 
 int main()
 {
-	std::thread t1(Add);
-	std::thread t2(Sub);
+	std::thread t1(Push);
+	std::thread t2(Push);
 
 	t1.join();
 	t2.join();
-
-	std::cout << sum << std::endl;
 
 	return 0;
 }
