@@ -6,58 +6,86 @@
 #include <atomic>
 #include <mutex>
 
-mutex m;
-queue<int32> q;
+#include <future>
 
-condition_variable cv;
-
-void Producer()
+int64 Calculate()
 {
-	while (true)
+	int64 sum = 0;
+	for (int32 i = 0; i < 100'000; ++i)
 	{
-		{
-			unique_lock<mutex> lock(m);
-			q.push(100);
-		}
-		cv.notify_one();
-
-		this_thread::sleep_for(100ms);
+		sum += i;
 	}
+
+	return sum;
 }
 
-void Consumer()
+class Knight
 {
-	while (true)
-	{
-		unique_lock<mutex> lock(m);
-		cv.wait(lock, []() -> bool { return !q.empty(); });
+public:
+	int64 GetHp() { return 100; }
+};
 
-		vector<int32> v;
-		bool isPopped = false;
-		{
-			while (q.empty() == false)
-			{
-				v.push_back(q.front());
-				q.pop();
-				isPopped = true;
-			}
-		}
+void PromiseWorker(std::promise<string>&& promise)
+{
+	promise.set_value("Secret Message");
+}
 
-		if (isPopped)
-		{
-			for(const int& e : v)
-				cout << e << endl;
-		}
-	}
+void TaskWorker(std::packaged_task<int64(void)>&& task)
+{
+	task();
 }
 
 int main()
 {
-	std::thread t1(Producer);
-	std::thread t2(Consumer);
+	// Synchronous
+	int64 result = Calculate();
 
-	t1.join();
-	t2.join();
+	// Future Asynchronous
+	{
+		std::future<int64> future = std::async(std::launch::async, Calculate);
+	
+		// do something ...
+	
+		future.wait();
+		int64 result = future.get();
+	}
+
+	// Future Asynchronous - Object Method
+	{
+		Knight k;
+	
+		std::future<int64> future = std::async(std::launch::async, &Knight::GetHp, k);;
+	
+		int64 result = future.get();
+	}
+
+	// Promise
+	{
+		std::promise<string> promise;
+		std::future<string> future = promise.get_future();
+		
+		thread t(PromiseWorker, std::move(promise));
+
+		string msg = future.get();
+
+		cout << msg << endl;
+
+		t.join();
+	}
+
+	// Packaged Task
+	{
+		std::packaged_task<int64(void)> task(Calculate);
+		std::future<int64> future = task.get_future();
+
+		thread t(TaskWorker, std::move(task));
+
+		int64 result = future.get();
+
+		cout << result << endl;
+
+		t.join();
+	}
 
 	return 0;
 }
