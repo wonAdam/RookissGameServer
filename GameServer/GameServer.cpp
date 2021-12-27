@@ -5,70 +5,64 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
+#include <Windows.h>
 
-class SpinLock
+mutex m;
+queue<int32> q;
+HANDLE h;
+
+void Producer()
 {
-public:
-	void lock()
+	while (true)
 	{
-		bool expected = false;
-		bool desired = true;
-
-		uint8 cnt = 0;
-		while (_locked.compare_exchange_strong(expected, desired) == false)
 		{
-			expected = false;
-
-			cnt++;
-
-			if (cnt > 1000u)
-			{
-				this_thread::yield();
-				//this_thread::sleep_for(0ms);
-				cnt = 0u;
-			}
+			unique_lock<mutex> lock(m);
+			q.push(100);
 		}
-	}
 
-	void unlock()
-	{
-		_locked.store(false);
-	}
+		::SetEvent(h);
 
-private:
-	atomic<bool> _locked = false;
-};
-
-int32 sum = 0;
-SpinLock spinLock;
-
-void Add()
-{
-	for (int32 i = 0; i < 10'000; ++i)
-	{
-		lock_guard<SpinLock> guard(spinLock);
-		sum++;
+		this_thread::sleep_for(100ms);
 	}
 }
 
-void Sub()
+void Consumer()
 {
-	for (int32 i = 0; i < 10'000; ++i)
+	while (true)
 	{
-		lock_guard<SpinLock> guard(spinLock);
-		sum--;
+		::WaitForSingleObject(h, INFINITE);
+
+		vector<int32> v;
+		bool isPopped = false;
+		{
+			unique_lock<mutex> lock(m);
+			while (q.empty() == false)
+			{
+				v.push_back(q.front());
+				q.pop();
+				isPopped = true;
+			}
+		}
+
+		if (isPopped)
+		{
+			for(const int& e : v)
+				cout << e << endl;
+		}
 	}
 }
 
 int main()
 {
-	std::thread t1(Add);
-	std::thread t2(Sub);
+	h = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+
+	std::thread t1(Producer);
+	std::thread t2(Consumer);
 
 	t1.join();
 	t2.join();
 
-	std::cout << sum << std::endl;
+	::CloseHandle(h);
 
 	return 0;
 }
