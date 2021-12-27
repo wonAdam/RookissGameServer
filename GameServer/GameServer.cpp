@@ -6,86 +6,87 @@
 #include <atomic>
 #include <mutex>
 
-#include <future>
+//#include <Windows.h>
 
-int64 Calculate()
+//int32 buffer[10000][10000];
+
+int32 x = 0;
+int32 y = 0;
+int32 r1 = 0;
+int32 r2 = 0;
+
+volatile bool ready = false;
+
+void Thread_1()
 {
-	int64 sum = 0;
-	for (int32 i = 0; i < 100'000; ++i)
-	{
-		sum += i;
-	}
+	while (!ready) { this_thread::yield(); }
 
-	return sum;
+	y = 1;
+	r1 = x;
 }
 
-class Knight
+void Thread_2()
 {
-public:
-	int64 GetHp() { return 100; }
-};
+	while (!ready) { this_thread::yield(); }
 
-void PromiseWorker(std::promise<string>&& promise)
-{
-	promise.set_value("Secret Message");
+	x = 1;
+	r2 = y;
 }
 
-void TaskWorker(std::packaged_task<int64(void)>&& task)
-{
-	task();
-}
 
 int main()
 {
-	// Synchronous
-	int64 result = Calculate();
+	int32 count = 0;
 
-	// Future Asynchronous
+	while (true)
 	{
-		std::future<int64> future = std::async(std::launch::async, Calculate);
-	
-		// do something ...
-	
-		future.wait();
-		int64 result = future.get();
+		ready = false;
+		count++;
+
+		x = y = r1 = r2 = 0;
+
+		thread t1(Thread_1);
+		thread t2(Thread_2);
+
+		ready = true;
+
+		t1.join();
+		t2.join();
+
+		if (r1 == 0 && r2 == 0)
+			break;
 	}
 
-	// Future Asynchronous - Object Method
-	{
-		Knight k;
-	
-		std::future<int64> future = std::async(std::launch::async, &Knight::GetHp, k);;
-	
-		int64 result = future.get();
-	}
+	cout << count << "time for success" << endl;
 
-	// Promise
-	{
-		std::promise<string> promise;
-		std::future<string> future = promise.get_future();
-		
-		thread t(PromiseWorker, std::move(promise));
+	//memset(buffer, 0, sizeof(buffer));
+	//
+	//{
+	//	uint64 start = GetTickCount64();
+	//	int64 sum = 0;
+	//	for (int32 i = 0; i < 10'000; ++i)
+	//		for (int32 j = 0; j < 10'000; ++j)
+	//			sum += buffer[i][j];
+	//
+	//	uint64 end = GetTickCount64();
+	//	cout << "Elapsed Tick " << (end - start) << endl;
+	//
+	//}
+	//
+	//
+	//{
+	//	uint64 start = GetTickCount64();
+	//	int64 sum = 0;
+	//	for (int32 i = 0; i < 10'000; ++i)
+	//		for (int32 j = 0; j < 10'000; ++j)
+	//			sum += buffer[j][i];
+	//
+	//	uint64 end = GetTickCount64();
+	//	cout << "Elapsed Tick " << (end - start) << endl;
+	//
+	//}
 
-		string msg = future.get();
 
-		cout << msg << endl;
-
-		t.join();
-	}
-
-	// Packaged Task
-	{
-		std::packaged_task<int64(void)> task(Calculate);
-		std::future<int64> future = task.get_future();
-
-		thread t(TaskWorker, std::move(task));
-
-		int64 result = future.get();
-
-		cout << result << endl;
-
-		t.join();
-	}
 
 	return 0;
 }
