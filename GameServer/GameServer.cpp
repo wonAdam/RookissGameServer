@@ -13,9 +13,20 @@ public:
 	{
 		bool expected = false;
 		bool desired = true;
+
+		uint8 cnt = 0;
 		while (_locked.compare_exchange_strong(expected, desired) == false)
 		{
 			expected = false;
+
+			cnt++;
+
+			if (cnt > 1000u)
+			{
+				this_thread::yield();
+				//this_thread::sleep_for(0ms);
+				cnt = 0u;
+			}
 		}
 	}
 
