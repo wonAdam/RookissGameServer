@@ -8,43 +8,31 @@
 #include <future>
 #include <Windows.h>
 
-atomic<bool> flag;
+thread_local int32 LThreadId;
+
+void ThreadMain(int32 threadId)
+{
+	LThreadId = threadId;
+
+	while (true)
+	{
+		cout << "Hi! I am Thread " << LThreadId << endl;
+		this_thread::sleep_for(1s);
+	}
+}
 
 int main()
 {
-	flag = false;
+	vector<thread> threads;
 
-	bool flagLockFree = flag.is_lock_free();
-	cout << flagLockFree << endl;
-
-	flag.store(true, memory_order::memory_order_seq_cst);
-
-	bool val = flag.load(memory_order::memory_order_seq_cst);
-
+	for (int32 i = 0; i < 10; ++i)
 	{
-		/*bool prev = flag;
-		flag = true;*/
-
-		bool prev = flag.exchange(true);
+		int32 threadId = i + 1;
+		threads.push_back(thread(ThreadMain, threadId));
 	}
 
-	// CAS Conpare and Swap 
-	{
-		bool expected = false;
-		bool desired = true;
-		flag.compare_exchange_strong(expected, desired);
-
-		/*if (flag == expected)
-		{
-			flag = desired;
-			return true;
-		}
-		else
-		{
-			expected = flag;
-			return false;
-		}*/
-	}
+	for (int32 i = 0; i < 10; ++i)
+		threads[i].join();
 
 	return 0;
 }
