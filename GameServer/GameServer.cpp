@@ -8,30 +8,112 @@
 #include <future>
 #include <Windows.h>
 
-thread_local int32 LThreadId;
+#include "ConcurrentQueue.h"
+#include "ConcurrentStack.h"
 
-void ThreadMain(int32 threadId)
+LockQueue<int32> q;
+LockStack<int32> s;
+
+void StackPush()
 {
-	LThreadId = threadId;
-
 	while (true)
 	{
-		cout << "Hi! I am Thread " << LThreadId << endl;
-		this_thread::sleep_for(1s);
+		int32 value = rand() % 100;
+		s.Push(value);
+
+		this_thread::sleep_for(10ms);
 	}
 }
 
+void StackWaitPop()
+{
+	while (true)
+	{
+		int32 data; 
+		s.WaitTillPop(OUT data);
+		cout << "StackWaitPop: " << data << endl;
+	}
+}
+
+void StackTryPop()
+{
+	while (true)
+	{
+		int32 data;
+		if (s.TryPop(OUT data))
+		{
+			cout << "StackTryPop: " << data << endl;
+		}
+	}
+}
+
+void QueuePush()
+{
+	while (true)
+	{
+		int32 value = rand() % 100;
+		q.Push(value);
+
+		this_thread::sleep_for(10ms);
+	}
+}
+
+void QueueWaitPop()
+{
+	while (true)
+	{
+		int32 data;
+		q.WaitTillPop(OUT data);
+		cout << "QueueWaitPop: " << data << endl;
+	}
+}
+
+void QueueTryPop()
+{
+	while (true)
+	{
+		int32 data;
+		if (q.TryPop(OUT data))
+		{
+			cout << "QueueTryPop: " << data << endl;
+		}
+	}
+}
+
+
 int main()
 {
-	vector<thread> threads;
+	srand((unsigned int)time(NULL));
 
-	for (int32 i = 0; i < 10; ++i)
+	vector<thread> threads;
+	for (int i = 0; i < 5; i++)
 	{
-		int32 threadId = i + 1;
-		threads.push_back(thread(ThreadMain, threadId));
+		threads.push_back(thread(StackPush));
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		threads.push_back(thread(StackTryPop));
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		threads.push_back(thread(StackWaitPop));
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		threads.push_back(thread(QueuePush));
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		threads.push_back(thread(QueueTryPop));
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		threads.push_back(thread(QueueWaitPop));
 	}
 
-	for (int32 i = 0; i < 10; ++i)
+
+
+	for (int i = 0 ; i < threads.size(); ++i)
 		threads[i].join();
 
 	return 0;
