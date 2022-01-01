@@ -12,7 +12,7 @@
 #include "ConcurrentStack.h"
 
 LockQueue<int32> q;
-LockStack<int32> s;
+LockFreeStack<int32> s;
 
 void StackPush()
 {
@@ -25,15 +25,15 @@ void StackPush()
 	}
 }
 
-void StackWaitPop()
-{
-	while (true)
-	{
-		int32 data; 
-		s.WaitTillPop(OUT data);
-		cout << "StackWaitPop: " << data << endl;
-	}
-}
+//void StackWaitPop()
+//{
+//	while (true)
+//	{
+//		int32 data; 
+//		s.WaitTillPop(OUT data);
+//		cout << "StackWaitPop: " << data << endl;
+//	}
+//}
 
 void StackTryPop()
 {
@@ -46,39 +46,39 @@ void StackTryPop()
 		}
 	}
 }
-
-void QueuePush()
-{
-	while (true)
-	{
-		int32 value = rand() % 100;
-		q.Push(value);
-
-		this_thread::sleep_for(10ms);
-	}
-}
-
-void QueueWaitPop()
-{
-	while (true)
-	{
-		int32 data;
-		q.WaitTillPop(OUT data);
-		cout << "QueueWaitPop: " << data << endl;
-	}
-}
-
-void QueueTryPop()
-{
-	while (true)
-	{
-		int32 data;
-		if (q.TryPop(OUT data))
-		{
-			cout << "QueueTryPop: " << data << endl;
-		}
-	}
-}
+//
+//void QueuePush()
+//{
+//	while (true)
+//	{
+//		int32 value = rand() % 100;
+//		q.Push(value);
+//
+//		this_thread::sleep_for(10ms);
+//	}
+//}
+//
+//void QueueWaitPop()
+//{
+//	while (true)
+//	{
+//		int32 data;
+//		q.WaitTillPop(OUT data);
+//		cout << "QueueWaitPop: " << data << endl;
+//	}
+//}
+//
+//void QueueTryPop()
+//{
+//	while (true)
+//	{
+//		int32 data;
+//		if (q.TryPop(OUT data))
+//		{
+//			cout << "QueueTryPop: " << data << endl;
+//		}
+//	}
+//}
 
 
 int main()
@@ -94,22 +94,22 @@ int main()
 	{
 		threads.push_back(thread(StackTryPop));
 	}
-	for (int i = 0; i < 5; i++)
-	{
-		threads.push_back(thread(StackWaitPop));
-	}
-	for (int i = 0; i < 5; i++)
-	{
-		threads.push_back(thread(QueuePush));
-	}
-	for (int i = 0; i < 5; i++)
-	{
-		threads.push_back(thread(QueueTryPop));
-	}
-	for (int i = 0; i < 5; i++)
-	{
-		threads.push_back(thread(QueueWaitPop));
-	}
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	threads.push_back(thread(StackWaitPop));
+	//}
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	threads.push_back(thread(QueuePush));
+	//}
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	threads.push_back(thread(QueueTryPop));
+	//}
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	threads.push_back(thread(QueueWaitPop));
+	//}
 
 
 

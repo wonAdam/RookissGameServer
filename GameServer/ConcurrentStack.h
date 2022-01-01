@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <mutex>
 
@@ -49,3 +49,53 @@ private:
 	condition_variable _condVar;
 };
 
+template <typename T>
+class LockFreeStack
+{
+	struct Node
+	{
+		Node(const T& value) : data(value)
+		{
+
+		}
+
+		T data;
+		Node* next;
+	};
+
+public:
+	void Push(const T& value)
+	{
+		Node* node = new Node(value);
+
+		//node->next = _head;
+		//_head = node;
+		while (_head.compare_exchange_weak(node->next, node) == false)
+		{
+		}
+		
+	}
+
+	bool TryPop(T& value)
+	{
+		Node* oldHead = _head;
+
+		while (oldHead && _head.compare_exchange_weak(oldHead, oldHead->next) == false)
+		{
+		}
+
+		if (oldHead == nullptr)
+			return false;
+
+		value = oldHead->data;
+		
+		//다른 스레드가 같은 시점에 TryPop을 하고 있으면, 
+		//해당 메모리는 이미 해제되어있을 가능성이 있다.
+		//delete oldHead;
+
+		return true;
+	}
+
+private:
+	atomic<Node*> _head;
+};
