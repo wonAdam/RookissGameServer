@@ -85,6 +85,9 @@ int main()
 {
 	srand((unsigned int)time(NULL));
 
+	thread t1(StackPush);
+	thread t2(StackTryPop);
+
 	vector<thread> threads;
 	for (int i = 0; i < 5; i++)
 	{
