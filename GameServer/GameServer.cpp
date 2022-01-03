@@ -4,8 +4,6 @@
 
 #include "ThreadManager.h"
 
-CoreGlobal Core;
-
 void ThreadMain()
 {
 	while (true)

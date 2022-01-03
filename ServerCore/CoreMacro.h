@@ -15,3 +15,6 @@
 		__analysis_assume(expr);			\
 	}										\
 }					
+
+#define OUT 
+#define IN 
