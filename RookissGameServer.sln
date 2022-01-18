@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DummyClient", "DummyClient\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerCore", "ServerCore\ServerCore.vcxproj", "{618B941D-7CCE-4DC5-989A-9842680FFBD4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FindingPrimeNumbers", "FindingPrimeNumbers\FindingPrimeNumbers.vcxproj", "{A8C4367F-2283-4295-9FDC-FDB87BECDDA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{618B941D-7CCE-4DC5-989A-9842680FFBD4}.Release|x64.Build.0 = Release|x64
 		{618B941D-7CCE-4DC5-989A-9842680FFBD4}.Release|x86.ActiveCfg = Release|Win32
 		{618B941D-7CCE-4DC5-989A-9842680FFBD4}.Release|x86.Build.0 = Release|Win32
+		{A8C4367F-2283-4295-9FDC-FDB87BECDDA3}.Debug|x64.ActiveCfg = Debug|x64
+		{A8C4367F-2283-4295-9FDC-FDB87BECDDA3}.Debug|x64.Build.0 = Debug|x64
+		{A8C4367F-2283-4295-9FDC-FDB87BECDDA3}.Debug|x86.ActiveCfg = Debug|Win32
+		{A8C4367F-2283-4295-9FDC-FDB87BECDDA3}.Debug|x86.Build.0 = Debug|Win32
+		{A8C4367F-2283-4295-9FDC-FDB87BECDDA3}.Release|x64.ActiveCfg = Release|x64
+		{A8C4367F-2283-4295-9FDC-FDB87BECDDA3}.Release|x64.Build.0 = Release|x64
+		{A8C4367F-2283-4295-9FDC-FDB87BECDDA3}.Release|x86.ActiveCfg = Release|Win32
+		{A8C4367F-2283-4295-9FDC-FDB87BECDDA3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
