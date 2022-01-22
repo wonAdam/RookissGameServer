@@ -4,8 +4,12 @@
 template<typename Type, typename... Args>
 Type* xnew(Args&&... args)
 {
+	// memory allocation
 	Type* memory = static_cast<Type*>(BaseAllocator::Alloc(sizeof(Type)));
+
+	// constructor
 	new(memory)Type(args);
+	
 	return memory;
 }
 
