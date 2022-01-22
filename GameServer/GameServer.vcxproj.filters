@@ -7,9 +7,6 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{f28ac086-c5db-4099-b6ab-5e35846ead4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Memory">
-      <UniqueIdentifier>{55999a28-ba50-4ebe-a552-fcce461ae1b2}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp">
@@ -18,28 +15,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\ServerCore\RefCounting.cpp">
-      <Filter>Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator.cpp">
-      <Filter>Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="Memory.cpp">
-      <Filter>Memory</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ServerCore\RefCounting.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory.h">
-      <Filter>Memory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
