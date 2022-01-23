@@ -48,10 +48,10 @@
     <ClInclude Include="RefCounting.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="..\GameServer\Allocator.h">
+    <ClInclude Include="Allocator.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="..\GameServer\Memory.h">
+    <ClInclude Include="Memory.h">
       <Filter>Memory</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,10 +80,10 @@
     <ClCompile Include="RefCounting.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\GameServer\Allocator.cpp">
+    <ClCompile Include="Allocator.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\GameServer\Memory.cpp">
+    <ClCompile Include="Memory.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
   </ItemGroup>
