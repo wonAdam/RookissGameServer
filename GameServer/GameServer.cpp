@@ -40,7 +40,7 @@ public:
 	//}
 
 
-private:
+public:
 	int _hp = 100;
 	int _attack = 15;
 };
@@ -78,13 +78,32 @@ private:
 
 int main()
 {
-	//Knight* k = new Knight();
 	Knight* k1 = xnew<Knight>();
 	Knight* k2 = xnew<Knight>(500, 80);
 
-	//delete k;
 	xdelete(k1);
 	xdelete(k2);
+
+	k2->_hp = 10;
+
+	//int* num = new int;
+	//*num = 100;
+
+	//int64 address = reinterpret_cast<int64>(num);
+	//std::cout << address << std::endl;
+
+	//delete num;
+
+	//SYSTEM_INFO info;
+	//::GetSystemInfo(&info);
+
+	//Knight* k1 = new Knight();
+
+	//int* test = (int*)::VirtualAlloc(NULL, 4, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+	//*test = 100;
+	//::VirtualFree(test, 0, MEM_RELEASE);
+
+	//*test = 20;
 
 	return 0;
 }
