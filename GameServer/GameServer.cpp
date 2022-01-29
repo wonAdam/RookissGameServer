@@ -6,23 +6,22 @@
 #include "ThreadManager.h"
 #include "Memory.h"
 #include "Allocator.h"
-#include "LockFreeStack.h"
 
 DECLSPEC_ALIGN(16)
 class Data // : public SListEntry
 {
 public:
-	SListEntry _entry;
+	SLIST_ENTRY _entry;
 	int64 _rand = rand() % 1000;
 };
 
-SListHeader* GHeader;
+SLIST_HEADER* GHeader;
 
 int main()
 {
-	GHeader = new SListHeader();
+	GHeader = new SLIST_HEADER();
 	ASSERT_CRASH(((uint64)GHeader % 16) == 0);
-	InitializeHead(GHeader);
+	::InitializeSListHead(GHeader);
 
 	for (int32 i = 0; i < 3; i++)
 	{
@@ -33,9 +32,9 @@ int main()
 					Data* data = new Data();
 					ASSERT_CRASH(((uint64)data % 16) == 0);
 
-					PushEntrySList(GHeader, (SListEntry*)data);
+					::InterlockedPushEntrySList(GHeader, (SLIST_ENTRY*)data);
 					this_thread::sleep_for(10ms);
-				}
+				  }
 			});
 	}
 
@@ -46,7 +45,7 @@ int main()
 				while (true)
 				{
 					Data* pop = nullptr;
-					pop = (Data*)PopEntrySList(GHeader);
+					pop = (Data*)::InterlockedPopEntrySList(GHeader);
 
 					if (pop)
 					{
