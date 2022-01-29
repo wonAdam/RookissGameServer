@@ -63,7 +63,7 @@ void* Memory::Allocate(int32 size)
 
 	if (allocSize > MAX_ALLOC_SIZE)
 	{
-		header = reinterpret_cast<MemoryHeader*>(::malloc(allocSize));
+		header = reinterpret_cast<MemoryHeader*>(::_aligned_malloc(allocSize, SLIST_ALIGNMENT));
 	}
 	else
 	{
@@ -81,7 +81,7 @@ void Memory::Release(void* ptr)
 
 	if (allocSize > MAX_ALLOC_SIZE)
 	{
-		::free(header);
+		::_aligned_free(header);
 	}
 	else
 	{
