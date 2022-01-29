@@ -27,8 +27,8 @@
 #define WRITE_LOCK				WRITE_LOCK_IDX(0)
 
 #ifdef _DEBUG
-#define xALLOC(size) StompAllocator::Alloc(size)
-#define xRELEASE(ptr) StompAllocator::Release(ptr)
+#define xALLOC(size) PoolAllocator::Alloc(size)
+#define xRELEASE(ptr) PoolAllocator::Release(ptr)
 #else
 #define xALLOC(size) BaseAllocator::Alloc(size)
 #define xRELEASE(ptr) BaseAllocator::Release(ptr)

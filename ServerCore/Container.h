@@ -15,12 +15,6 @@
 template<typename Type>
 using xVector = std::vector<Type, STLAllocator<Type>>;
 
-template<typename Type, typename Container = xDeque<Type>>
-using xQueue = std::queue<Type, Container>;
-
-template<typename Type, typename Container = xDeque<Type>>
-using xStack = std::stack<Type, Container>;
-
 template<typename Type, typename Container = xVector<Type>, typename Pred = less<typename Container::value_type>> 
 using xPriorityQueue = std::priority_queue<Type, Container, Pred>;
 
@@ -29,6 +23,12 @@ using xList = std::list<Type, STLAllocator<Type>>;
 
 template<typename Type>
 using xDeque = std::deque<Type, STLAllocator<Type>>;
+
+template<typename Type, typename Container = xDeque<Type>>
+using xQueue = std::queue<Type, Container>;
+
+template<typename Type, typename Container = xDeque<Type>>
+using xStack = std::stack<Type, Container>;
 
 template<typename Key, typename Value, typename Pred = std::less<Key>>
 using xMap = std::map<Key, Value, Pred, STLAllocator<std::pair<Key, Value>>>;
